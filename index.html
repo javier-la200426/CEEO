@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>ampy</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0"> <!-- For having website be compatible with other devices-->
+    <link rel="stylesheet" href="https://pyscript.net/releases/2024.3.2/core.css"> <!-- For styling-->
+    <script type="module" src="https://pyscript.net/releases/2024.3.2/core.js"></script> <!-- Including external Pyscript module-->
+    <link rel="stylesheet" href="styles.css"> <!-- Additional styling -->
+    <!--Javier_added. Controls button class-->
+    <style>
+        .round-button {
+            background-color: #4CAF50; /* Green */
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            border-radius: 30px;
+            transition-duration: 0.4s;
+            cursor: pointer;
+        }
+        .round-button:hover {
+            background-color: black;
+            color: white;
+            border: 0px solid #4CAF50;
+        }
+
+        #serialTerminal {
+            display: flex;
+            flex-direction: column-reverse;
+            background-color: #f4f4f4;
+            color: #333;
+            position: relative;
+            height: 70vh;
+            width: 90vw;
+            border: 2px solid #4CAF50; /* Matching border color with button */
+            border-radius: 8px;
+            font: 14px/18px 'Courier New', Courier, monospace;
+            overflow: auto;
+            padding: 10px;
+            margin: 20px auto;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+    </style>
+     <!--Javier_added-->
+    
+</head>
+<body>
+    <script type="py" src="./main.py" config="./settings.json" async></script>
+    <button class="round-button" py-click="connectIt">Connect to Serial</button>
+    <button class="round-button" py-click="CtrlC">CtrlC</button>
+    <button class="round-button" py-click="loadFile">Load File</button>
+<!-- Below controls size of box -->
+    <!--JAV:script type="py" terminal>print("hello world")</script-->
+
+    <!--Controls box size (code)-->
+   <div>
+        <pre 
+            id="serialTerminal" 
+            tabindex="0"
+        ></pre><br>
+        
+    <div id='background' class="overlay"></div> <!-- Overlay for greying out background -->
+    <div id='dialog' class="dialog-box">
+        <h2>Uploading File</h2>
+        <div id='dialog_text'><p>This is the content of the dialog box.</p></div>
+        <progress id="status" value="0" max="100"> 0% </progress>
+    </div>
+ </body>
+</html>

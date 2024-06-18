@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>File Explorer</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://pyscript.net/releases/2024.3.2/core.css">
+    <script type="module" src="https://pyscript.net/releases/2024.3.2/core.js"></script>
+    <link rel="stylesheet" href="styles.css">
+    
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            padding: 20px 0;
+            box-sizing: border-box;
+        }
+        
+        .round-button {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 18px;
+            margin: 4px 2px;
+            border-radius: 30px;
+            transition-duration: 0.4s;
+            cursor: pointer;
+        }
+
+        .round-button:hover {
+            background-color: black;
+            color: white;
+            border: 0px solid #4CAF50;
+        }
+
+        #serialTerminal {
+            display: flex;
+            flex-direction: column-reverse;
+            background-color: #f4f4f4;
+            color: #333;
+            position: relative;
+            height: 70vh;
+            width: 90vw;
+            border: 2px solid #4CAF50;
+            border-radius: 8px;
+            font: 14px/18px 'Courier New', Courier, monospace;
+            overflow: auto;
+            padding: 10px;
+            margin: 20px auto;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 10;
+            display: none;
+        }
+
+        .dialog-box {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            padding: 20px;
+            border: 2px solid yellow;
+            border-radius: 8px;
+            font-family: Arial, sans-serif;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            z-index: 20;
+            width: 300px;
+            text-align: center;
+            display: none;
+        }
+
+        #status {
+            width: 100%;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div>
+<!-- Below controls size of box -->
+    <!--Javier: to see terminal output-->
+    <script type="py" terminal>print("hello world")</script>
+
+    <!--Controls box size (code)-->
+   </div>
+       
+    <div class="button-container">
+        <button class="round-button" py-click="connectIt">Connect to Serial</button>
+        <button class="round-button" py-click="CtrlC">CtrlC</button>
+    </div>
+
+    <!-- Terminal display -->
+    <pre id="serialTerminal" tabindex="0"></pre>
+
+    <!-- Overlay for background -->
+    <div id="background" class="overlay"></div>
+
+    <!-- Dialog box for file operations -->
+    <div id="dialog" class="dialog-box">
+        <h2>Getting File</h2>
+        <div id="dialog_text"><p>This is the content of the dialog box.</p></div>
+        <progress id="status" value="0" max="100">0%</progress>
+    </div>
+
+    <!-- Success message dialog box -->
+    <div id="success_message" class="dialog-box" style="display:none;">
+        <h2>Success!</h2>
+        <div id="success_text"><p>Your files successfully loaded.</p></div>
+        <button id="ok_button" py-click="Okbtn">OK</button>
+    </div>
+
+    <div class="file-list">
+        <h2>File List</h2>
+        <table id="file-list-items" class="file-table">
+            <thead>
+                <tr>
+                    <th>Filename</th>
+                    <th>Type</th>
+                    <th>Inode</th>
+                    <th>Size</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- File items will be dynamically added here -->
+            </tbody>
+        </table>
+    </div>
+
+
+
+    <script>
+        //function that maps python object (left) to the global js variable
+        // exports python functions to javascript
+        //This way we can call python functions in JS
+        //object is python object. VariableName is what you want it to be called in JS
+        function createObject(object, variableName) {
+            globalThis[variableName] = object
+        }
+
+        
+
+    </script>
+        <!--JavaScript funciton that iterates over dictionary and outputs 
+        the information of all files-->
+    <!--The input is assumed to be a string representation of a dictionary
+    where the key is the filename and the value is a list with 3 numbers representing
+    the type, inode, and size-->
+    <script>
+    async function displayFiles(my_files) {
+        //Parse string (my_files) to create a javascript object
+        js_object = JSON.parse(my_files); //
+        const fileListContainer = document.getElementById('file-list-items').getElementsByTagName('tbody')[0];
+
+        // Clear any existing content
+        fileListContainer.innerHTML = '';
+    
+        // Loop through each file in the dictionary
+        for (const filename in js_object) {
+            const fileInfo = js_object[filename];
+            const type = fileInfo[0];
+            const inode = fileInfo[1];
+            const size = fileInfo[2];
+    
+            // Create a row for each file item
+            const fileRow = document.createElement('tr');
+    
+            // Construct the HTML content for the file row
+            const rowContent = `
+                <td class="filename-cell">${filename}</td>
+                <td>${type}</td>
+                <td>${inode}</td>
+                <td>${size} bytes</td>
+            `;
+    
+            // Set the inner HTML of the file row
+            fileRow.innerHTML = rowContent;
+    
+            // Append the file row to the file list container
+            fileListContainer.appendChild(fileRow);
+        }
+        attachEventListenersToFilenameCells();
+    }
+    </script>
+
+    <!-- Functions that attach event listeners to each files. handleFileClick defines what to
+    do when a filename is clicked-->
+    <script>
+        //document.addEventListener('DOMContentLoaded', function() {   
+        //}
+        // Function to attach event listeners to filename cells
+    function attachEventListenersToFilenameCells() {
+        const filenameCells = document.querySelectorAll('.filename-cell'); 
+        filenameCells.forEach(cell => {
+            // Click event listener
+            cell.addEventListener('click', function() {
+                handleFileClick(cell.textContent.trim()); // Assuming cell contains filename
+            });
+        });
+    }
+
+    // Function to handle file click action
+    function handleFileClick(filename) {
+        // Implement logic to handle file click event
+        console.log('File clicked:', filename);
+        //added event listener to wait for python code to finish running
+        //this way, the function fileClicked is created first in python (so that we can call it here)
+        //window.addEventListener("py:all-done", function(){ 
+         //   fileClicked_js()
+       // })
+        fileClicked_js(filename)
+    }
+    </script>
+        
+        
+
+        <!-- Call displayFiles with js_object when ready -->
+    
+
+
+
+
+    <!--JAV PASTE-->
+    
+
+    <!-- Script to load and handle file list -->
+    <script type="py" src="./main.py" config="./settings.json" async></script>
+</body>
+</html>

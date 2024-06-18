@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>File Explorer</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://pyscript.net/releases/2024.3.2/core.css">
+    <script type="module" src="https://pyscript.net/releases/2024.3.2/core.js"></script>
+    <link rel="stylesheet" href="styles.css">
+    
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            padding: 20px 0;
+            box-sizing: border-box;
+        }
+        
+        .round-button {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 18px;
+            margin: 4px 2px;
+            border-radius: 30px;
+            transition-duration: 0.4s;
+            cursor: pointer;
+        }
+
+        .round-button:hover {
+            background-color: black;
+            color: white;
+            border: 0px solid #4CAF50;
+        }
+
+        #serialTerminal {
+            display: flex;
+            flex-direction: column-reverse;
+            background-color: #f4f4f4;
+            color: #333;
+            position: relative;
+            height: 70vh;
+            width: 90vw;
+            border: 2px solid #4CAF50;
+            border-radius: 8px;
+            font: 14px/18px 'Courier New', Courier, monospace;
+            overflow: auto;
+            padding: 10px;
+            margin: 20px auto;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 10;
+            display: none;
+        }
+
+        .dialog-box {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            padding: 20px;
+            border: 2px solid yellow;
+            border-radius: 8px;
+            font-family: Arial, sans-serif;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            z-index: 20;
+            width: 300px;
+            text-align: center;
+            display: none;
+        }
+
+        #status {
+            width: 100%;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div>
+<!-- Below controls size of box -->
+    <!--Javier: to see terminal output-->
+    <script type="py" terminal>print("hello world")</script>
+
+    <!--Controls box size (code)-->
+   </div>
+       
+    <div class="button-container">
+        <button class="round-button" py-click="connectIt">Connect to Serial</button>
+        <button class="round-button" py-click="CtrlC">CtrlC</button>
+    </div>
+
+    <div id="fileList" style="margin-top: 20px;">
+        <h2>File List</h2>
+        <ul id="file-list-items"></ul>
+    </div>
+
+    <!-- Terminal display -->
+    <pre id="serialTerminal" tabindex="0"></pre>
+
+    <!-- Overlay for background -->
+    <div id="background" class="overlay"></div>
+
+    <!-- Dialog box for file operations -->
+    <div id="dialog" class="dialog-box">
+        <h2>Getting File</h2>
+        <div id="dialog_text"><p>This is the content of the dialog box.</p></div>
+        <progress id="status" value="0" max="100">0%</progress>
+    </div>
+
+    <!-- Success message dialog box -->
+    <div id="success_message" class="dialog-box" style="display:none;">
+        <h2>Success!</h2>
+        <div id="success_text"><p>Your files successfully loaded.</p></div>
+        <button id="ok_button" py-click="Okbtn">OK</button>
+    </div>
+
+        <!--JavaScript funciton that iterates over dictionary and outputs 
+        the information of all files-->
+    <!--The input is assumed to be a string representation of a dictionary
+    where the key is the filename and the value is a list with 3 numbers representing
+    the type, inode, and size-->
+    <script>
+    async function displayFiles(my_files) {
+        //Parse string (my_files) to create a javascript object
+        js_object = JSON.parse(my_files); //
+        // Get the file list element
+        const fileList = document.getElementById('file-list-items');
+    
+        // Clear any existing list items
+        fileList.innerHTML = '';
+    
+        // Loop through each file in the dictionary
+        for (filename in js_object) {
+            fileInfo = js_object[filename];
+            type = fileInfo[0];   // Assuming type is the first element in the list
+            inode = fileInfo[1];  // Assuming inode is the second element in the list
+            size = fileInfo[2];   // Assuming size is the third element in the list
+            console.log(type);
+            // Create a list item element for each file
+            fileItem = document.createElement('li');
+    
+            // Construct the text content for the list item
+            textContent = `Filename: ${filename}<br>Type: ${type}<br>Inode: ${inode}<br>Size: ${size} bytes`;
+    
+            // Set the inner HTML of the list item
+            fileItem.innerHTML = textContent;
+    
+            // Add click event listener to display detailed information if needed
+            fileItem.addEventListener('click', () => {
+                console.log(`Filename: ${filename}, Type: ${type}, Inode: ${inode}, Size: ${size} bytes`);
+            });
+    
+            // Append the list item to the file list
+            fileList.appendChild(fileItem);
+        }
+    }
+    </script>
+
+        <!-- Call displayFiles with js_object when ready -->
+    
+
+
+
+
+    <!--JAV PASTE-->
+    
+
+    <!-- Script to load and handle file list -->
+    <script type="py" src="./main.py" config="./settings.json" async></script>
+</body>
+</html>

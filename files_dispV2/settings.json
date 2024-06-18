@@ -1,0 +1,7 @@
+{
+"packages": ["pyodide_http", "requests"],
+ "files": {
+    "./ampy.py": "ampy.py",
+    "https://chrisrogers.pyscriptapps.com/serial-v6/latest/myserial.py": "myserial.py"
+ }
+}

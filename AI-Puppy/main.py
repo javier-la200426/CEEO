@@ -53,21 +53,28 @@ function_dict = {
     65: small_motor_print
 }
 
-#Iterating over 6 ports (0 to 5
+#Iterating over 6 ports (0 to 5)
+#tuple = (1 if connected & recognized, port number, sensor_id)
+port_info = [()] * 6
 for i in range(6):
     #for each port get the device Id
     current_port = i
     try:
+        #below is line that will give you error (potentially)
         port_id = device.id(current_port) #this should be either 49, or 61 or 62 or... 65 #handle exception when not found
         # Call the corresponding function if the device ID is found
         if port_id in function_dict:
-            function_dict[port_id](i)
+            #function_dict[port_id](i)
+            port_info[i] = (1, i, port_id)
         else:
             print(f"No function defined for device ID {port_id}")
-    except OSError as e:
+            port_info[i] = (0,0,0)
+    except OSError as e: #nothing connected to it
         # Means port does not have any sensor connected to it
+        port_info[i] = (0,0,0)
         print("YAA")
         print(f"Port {current_port} error: {e}")
+print(port_info)
         
     
 

@@ -32,10 +32,13 @@ def light_matrix_print():
     print("light matrix")
 def small_motor_print():
     print("small motor")
+def medium_motor_print():
+    print("medium motor")
 
 #these functions print values of each sensor, motor, etc...
 #creating dictonary where key is device ID, and value is corresponding function
 function_dict = {
+    48: medium_motor_print,
     49: big_motor_print,
     61: color_sensor_print,
     62: distance_sensor_print,
@@ -47,17 +50,18 @@ function_dict = {
 #Iterating over 6 ports (0 to 5
 #for i in range(6):
     #for each port get the device Id
-    current_port = 0
-    try:
-        port_id = device.id(current_port) #this should be either 49, or 61 or 62 or... 65 #handle exception when not found
-        # Call the corresponding function if the device ID is found
-        if port_id in function_dict:
-            function_dict[port_id]()
-        else:
-            print(f"No function defined for device ID {port_id}")
-    except OSError as e:
-        # Means port does not have any sensor connected to it
-        print(f"Port {current_port} error: {e}")
+current_port = 5
+try:
+    port_id = device.id(current_port) #this should be either 49, or 61 or 62 or... 65 #handle exception when not found
+    # Call the corresponding function if the device ID is found
+    if port_id in function_dict:
+        function_dict[port_id]()
+    else:
+        print(f"No function defined for device ID {port_id}")
+except OSError as e:
+    # Means port does not have any sensor connected to it
+    print("YAA")
+    print(f"Port {current_port} error: {e}")
         
     
 
@@ -78,5 +82,3 @@ Small Motor = 65
 
 
 '''
-
-

@@ -22,16 +22,22 @@ where hub.port.A = 0
 #Defining dictionary for each sensor/motor
 def big_motor_print(port_num):
     print("big_motor", port_num)
+    
 def color_sensor_print(port_num):
     print("color sensor", port_num)
+    
 def distance_sensor_print(port_num):
     print("distance sensor", port_num)
+    
 def force_sensor_print(port_num):
     print("force sensor", port_num)
+    
 def light_matrix_print(port_num):
     print("light matrix", port_num)
+    
 def small_motor_print(port_num):
     print("small motor", port_num)
+    
 def medium_motor_print(port_num):
     print("medium motor", port_num)
 

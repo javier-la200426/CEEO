@@ -14,6 +14,10 @@ Iterate through all ports,
         Map it to a value
         (keys are ID's and values are function pointers)
         Call corresponding function
+
+We have 6 ports A-F
+where hub.port.A = 0
+... numbered 0-5
 '''
 #Defining dictionary for each sensor/motor
 def big_motor_print():
@@ -40,8 +44,15 @@ function_dict = {
     65: small_motor_print
 }
 
-    
-function_dict[65]()
+#Iterating over 6 ports (0 to 5
+for i in range(6):
+    #for each port get the device Id
+    current_port = i
+    try:
+        port_id = device.id(current_port) #this should be either 49, or 61 or 62 or... 65 #handle exception when not found
+    except:
+        
+    function_dict[port_id]()
 
 
 '''

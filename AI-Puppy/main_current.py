@@ -11,7 +11,8 @@ import time
 ARDUINO_NANO = 128
 SPIKE = 256
 
-stop_loop = False
+stop_loop = False #indicates when to stop loop (u want it to stop when user has access to repl)
+sensor = True #for switching between if and else statements (going from user repl to sensors)
 
 #defining functions to paste into spike
 sensor_code = """
@@ -98,6 +99,8 @@ def on_data_jav(chunk):
     print(chunk)
     #print("end-chunk")
 
+
+    
 def on_disconnect():
     connect.innerText = 'connect up'
 
@@ -113,54 +116,82 @@ def on_connect(event):
         #await terminal.paste(sensor_code, 'hidden')
         await terminal.paste(sensor_code, 'hidden')
         print("After paste")
-
+        terminal.terminal.attachCustomKeyEventHandler(on_user_input)
         #call sensor function
 
+def display_repl(event):
+    document.getElementById('repl').style.display = 'block'
+    #terminal.setOption('disableStdin', True)  # Disable user input
+
+
+def on_user_input(event):
+    print("asdlkjfd;slkfj;l kjlk;sdjafl;kdsajf;l ksdjl;ksazjf")    
+
+
+#sensor_info and get terminal in same button
 def on_sensor_info(event):  
-
-    #turn off repl to prevent user from interfering with my repl sensor code
-    document.getElementById('repl').style.display = 'none'
-
-    
-    #two lines below should go in while loop (checks every time the port info)
-    await terminal.eval(execute_code, 'hidden')
-    port_info_array = await terminal.eval("""port_info
-                        """, 'hidden')
-#execute code for thisL 
-# [(1, 0, 61), (0, 0, 0), (1, 2, 63), (1, 3, 48), (1, 4, 62), (1, 5, 64)]
+    global sensor
+    global stop_loop
+    #print("STOP-LOOP", stop_loop)
 
     stop_loop = False
-    # Add event listener for user input
-    #event handler when user types in keyboard
-    counter = 0
-    while counter != 3 and not stop_loop:
-        #iterating over tuples/ports
-        for t in port_info_array:
-            if t[0] == 1: #if something is connected to port
-                #call corresponding funcitons with corresponding ports
-                #t[2] is function/device id & t[1] is port #
-                if stop_loop:
-                    break;
-                number = await terminal.eval(f"""
-                    number = function_dict[{t[2]}]({t[1]})
-                    number
+    if sensor: #means you want to display sensors
+        sensor = False #so that on next click it displays terminal
+        #turn off repl to prevent user from interfering with my repl sensor code
+        document.getElementById('repl').style.display = 'none'
+    #execute code for thisL 
+    # [(1, 0, 61), (0, 0, 0), (1, 2, 63), (1, 3, 48), (1, 4, 62), (1, 5, 64)]
+        #stop_loop = False
+        # Add event listener for user input
+        #event handler when user types in keyboard
+        #counter = 0
+        print("STOP-LOOP", stop_loop)
+        while not stop_loop:
+              #two lines below should go in while loop (checks every time the port info)
+            await terminal.eval(execute_code, 'hidden')
+            port_info_array = await terminal.eval("""port_info
+                                """, 'hidden')
+            #iterating over tuples/ports
+            for t in port_info_array:
+                if t[0] == 1: #if something is connected to port
+                    #call corresponding funcitons with corresponding ports
+                    #t[2] is function/device id & t[1] is port #
+                    if stop_loop:
+                        break;
+                    number = await terminal.eval(f"""
+                        number = function_dict[{t[2]}]({t[1]})
+                        number
+                        
+                    """, 'hidden')
+    
+                    #now display number, device (t[2]), and port t[1]
+                    #instead of returning #, return array of tuple
                     
-                """, 'hidden')
+                    print("Number:", number)
+            #time.sleep(1)
+            #counter = counter + 1
+        #print("Back_HERE: ", port_info_array)
+    else: #go back to terminal
+        stop_loop = True
+        #asyncio.
+        #time.sleep_ms(1000) #to allow while loop to finish current iteration
+        #await asyncio.sleep(0.1)
+        sensor = True #so that next time it hides repls
+        document.getElementById('repl').style.display = 'block'
 
-                #now display number, device (t[2]), and port t[1]
-                #instead of returning #, return array of tuple
-                
-                print(number)
-        time.sleep(1)
-        counter = counter + 1
-    print("Back_HERE: ", port_info_array)
-    #terminal.buffer = "welkfjhwelkfjw"
-    #jav (starting sensor readings)
-   # good_code = sensor_code.replace('\n', '\r\n')
-    #print("HERE")
-    #await terminal.board.eval(sensor_code, hidden=False)
-   # await terminal.send_get(sensor_code, '>>>', 5, 100)
-                
+        #this code is kind of important.
+        #if the user spams the button, it prevents erros by disabling button for a short time
+        #so that if multiple clicks are made quickly, the same while loop below the if
+        #statement is not called twice
+        #this would result on calling eval again when the first eval call has not yet 
+        #finished. (resulting in error: can't eval 2 things at once)
+        sensor_button = document.getElementById('sensor_readings')
+        sensor_button.disabled = True
+        await asyncio.sleep(0.2)  # Wait for 2 seconds
+        sensor_button.disabled = False  # Re-enable the button
+       # document.getElementById('sensor_readings').style.display = 'block'
+    
+
 async def on_load(event):
     if terminal.connected:
         github = path.value
@@ -177,10 +208,12 @@ connect = document.getElementById('connect-spike')
 download = document.getElementById('download-code')
 path    = document.getElementById('gitpath')
 sensors = document.getElementById('sensor_readings')
+#get_repl = document.getElementById('get_repl')
 
 connect.onclick = on_connect
 download.onclick = on_load
 sensors.onclick = on_sensor_info
+#get_repl.onclick = display_repl
 
 terminal = ampy.Ampy(SPIKE)
 terminal.disconnect_callback = on_disconnect #defined for when physical or coded disconnection happens

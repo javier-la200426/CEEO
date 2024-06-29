@@ -14,6 +14,17 @@ SPIKE = 256
 stop_loop = False #indicates when to stop loop (u want it to stop when user has access to repl)
 sensor = True #for switching between if and else statements (going from user repl to sensors)
 #defining functions to paste into spike
+
+device_names = {
+    48: "medium_motor",
+    49: "big_motor",
+    61: "color_sensor",
+    62: "distance_sensor",
+    63: "force_sensor",
+    64: "light_matrix",
+    65: "small_motor"
+    
+}
 sensor_code = """
 
 import device
@@ -170,6 +181,9 @@ def on_data_jav(chunk):
     
 def on_disconnect():
     connect.innerText = 'connect up'
+    sensors.disabled = True
+    download.disabled = True
+    
 
 def on_connect(event):
     if terminal.connected:
@@ -178,8 +192,6 @@ def on_connect(event):
     else:
         await terminal.board.connect('repl')
         #enable buttons
-        sensors.disabled = False 
-        download.disabled = False
         document.getElementById('repl').style.display = 'none' #to prevent user from inputting during paste
         if terminal.connected:
             connect.innerText = 'disconnect'
@@ -187,6 +199,8 @@ def on_connect(event):
         #await terminal.paste(sensor_code, 'hidden')
         await terminal.paste(sensor_code, 'hidden')
         print("After paste")
+        sensors.disabled = False 
+        download.disabled = False
         document.getElementById('repl').style.display = 'block' #allow user to input only after paste is done
         #terminal.terminal.attachCustomKeyEventHandler(on_user_input)
         #call sensor function
@@ -204,6 +218,7 @@ def display_repl(event):
 def on_sensor_info(event):  
     global sensor
     global stop_loop
+    global device_names
     #print("STOP-LOOP", stop_loop)
 
     stop_loop = False
@@ -229,7 +244,9 @@ def on_sensor_info(event):
             #clearing it every time (very important)
             sensor_info_html = ""  # Initialize HTML content for sensor info
             #iterating over tuples/ports
-            for t in port_info_array:
+            for t in port_info_array: #if sensors are switched somewhere her, then error cause u don't udpate port_info_array
+                #solution would be to break out of loop if a bool is triggered(port disconnected)
+                
                 if t[0] == 1: #if something is connected to port
                     #call corresponding funcitons with corresponding ports
                     #t[2] is function/device id & t[1] is port #
@@ -254,7 +271,7 @@ def on_sensor_info(event):
                         sensor_info_html += f"""
                             <div class="sensor-info-item">
                                 <span>Number: {color_info} (Color: {color_name})</span>
-                                <span>Device: {t[2]}</span>
+                                <span>Device: {device_names[t[2]]}</span>
                                 <span>Port: {t[1]}</span>
                             </div>
                         """
@@ -262,7 +279,7 @@ def on_sensor_info(event):
                         sensor_info_html += f"""
                             <div class="sensor-info-item">
                                 <span>Number: {number}</span>
-                                <span>Device: {t[2]}</span>
+                                <span>Device: {device_names[t[2]]}</span>
                                 <span>Port: {t[1]}</span>
                             </div>
                         """

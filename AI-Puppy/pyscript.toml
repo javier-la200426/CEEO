@@ -1,0 +1,9 @@
+name = "AI Puppy Lesson 1_Jav_June26 Copy"
+
+[files]
+"https://chrisrogers.pyscriptapps.com/serialterminal/latest/andrea_terminal.py" = "andrea_terminal.py"
+"https://chrisrogers.pyscriptapps.com/ampy/latest/ampy.py" = "ampy.py"
+"https://chrisrogers.pyscriptapps.com/restapi/latest/restapi.py" = "restapi.py"
+
+[js_modules.main]
+"https://esm.run/micro-repl@0.5.0/serial" = "micro_repl"

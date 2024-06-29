@@ -13,7 +13,6 @@ SPIKE = 256
 
 stop_loop = False #indicates when to stop loop (u want it to stop when user has access to repl)
 sensor = True #for switching between if and else statements (going from user repl to sensors)
-
 #defining functions to paste into spike
 sensor_code = """
 
@@ -178,6 +177,9 @@ def on_connect(event):
         await terminal.board.disconnect()
     else:
         await terminal.board.connect('repl')
+        #enable buttons
+        sensors.disabled = False 
+        download.disabled = False
         document.getElementById('repl').style.display = 'none' #to prevent user from inputting during paste
         if terminal.connected:
             connect.innerText = 'disconnect'
@@ -206,6 +208,7 @@ def on_sensor_info(event):
 
     stop_loop = False
     if sensor: #means you want to display sensors
+        download.disabled = True #disable it 
         sensor = False #so that on next click it displays terminal
         #turn off repl to prevent user from interfering with my repl sensor code
         document.getElementById('repl').style.display = 'none'
@@ -276,6 +279,8 @@ def on_sensor_info(event):
             #counter = counter + 1
         #print("Back_HERE: ", port_info_array)
     else: #go back to terminal
+        #enable download button
+        download.disabled = False
         stop_loop = True
         #asyncio.
         #time.sleep_ms(1000) #to allow while loop to finish current iteration
@@ -292,18 +297,24 @@ def on_sensor_info(event):
         #finished. (resulting in error: can't eval 2 things at once)
         sensor_button = document.getElementById('sensor_readings')
         sensor_button.disabled = True
+        download.disabled = True #prevent from downloading straight away also 
         await asyncio.sleep(0.2)  # Wait for 2 seconds
         sensor_button.disabled = False  # Re-enable the button
+        download.disabled = False
        # document.getElementById('sensor_readings').style.display = 'block'
     
 
 async def on_load(event):
     if terminal.connected:
+        download.disabled = True #dont enable user to click downaload again if already in downlaod
+        sensors.disabled = True #dont let user run sensors
         github = path.value
         name = github.split('/')[-1]
         print('path, name: ',github,name)
         reply = await restapi.get(github)
         status = await terminal.download(name,reply)
+        sensors.disabled = False #re-enable it
+        download.disabled = False
         if not status: 
             window.alert(f"Failed to load {name}")  
     else:
@@ -318,6 +329,9 @@ sensors = document.getElementById('sensor_readings')
 connect.onclick = on_connect
 download.onclick = on_load
 sensors.onclick = on_sensor_info
+#start disabled until connected
+sensors.disabled = True 
+download.disabled = True
 #get_repl.onclick = display_repl
 
 terminal = ampy.Ampy(SPIKE)

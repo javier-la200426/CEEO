@@ -19,14 +19,72 @@ sensor_code = """
 
 import device
 import motor
+import color_sensor
+import color
 
+#test this
 def big_motor_print(port_num):
     print("big_motor", port_num)
-    return 1 #change this
-    
+    abs_pos = motor.absolute_position(port_num)
+    if (abs_pos < 0):
+        abs_pos = abs_pos + 360
+    return abs_pos
+
+#color.RED = 1
+#9 colors:
+''' 
+Table 1:
+
+Red - 1
+Green - 2
+Blue - 3
+Magenta - 4
+Yellow 5
+Orange - 6
+Azure - 7 
+Black - 8
+White - 9
+
+'''
+#returns tuple with (color from table 1, r, g , b)
 def color_sensor_print(port_num):
     print("color sensor", port_num)
-    return 1 #change this
+    color_info = [-1,-1,-1,-1] #tuple with, color, r,g,b values 
+    #variable I will use to identify color based on Table 1
+    my_color = -1 #if not color is detected
+    sensor_color = color_sensor.color(port_num) #color that sensor detects
+    if sensor_color is color.RED:
+        my_color = 1
+    elif sensor_color is color.GREEN:
+        my_color = 2
+    elif sensor_color is color.BLUE:
+        my_color = 3
+    elif sensor_color is color.MAGENTA:
+        my_color = 4
+    elif sensor_color is color.YELLOW:
+        my_color = 5
+    elif sensor_color is color.ORANGE:
+        my_color = 6
+    elif sensor_color is color.AZURE:
+        my_color = 7
+    elif sensor_color is color.BLACK:
+        my_color = 8
+    elif sensor_color is color.WHITE:
+        my_color = 9
+    
+    color_info[0] = my_color
+    
+    rgbi = color_sensor.rgbi(port_num)
+    
+    color_info[1] = rgbi[0] #red
+    color_info[2] = rgbi[1] #green
+    color_info[3] = rgbi[2] #blue
+    
+    color_info_tuple = tuple(color_info)
+        
+    #print("My-COlor: ", color_info_tuple)
+    
+    return color_info_tuple
     
 def distance_sensor_print(port_num):
     print("distance sensor", port_num)
@@ -39,14 +97,24 @@ def force_sensor_print(port_num):
 def light_matrix_print(port_num):
     print("light matrix", port_num)
     return 1 #change this
-    
+
+#test this
 def small_motor_print(port_num):
     print("small motor", port_num)
-    return 1 #change this
-    
+    abs_pos = motor.absolute_position(port_num)
+    if (abs_pos < 0):
+        abs_pos = abs_pos + 360
+    return abs_pos
+
+#absolute position goes like 0...179, -180, -179 = vals
+#want 0...179, 180, 181,... 360 (then go back to 0)
+#so return 360 + val
 def medium_motor_print(port_num):
     print("medium motor", port_num)
-    return motor.relative_position(port_num)
+    abs_pos = motor.absolute_position(port_num)
+    if (abs_pos < 0):
+        abs_pos = abs_pos + 360
+    return abs_pos
 
 function_dict = {
     48: medium_motor_print,
@@ -110,13 +178,15 @@ def on_connect(event):
         await terminal.board.disconnect()
     else:
         await terminal.board.connect('repl')
+        document.getElementById('repl').style.display = 'none' #to prevent user from inputting during paste
         if terminal.connected:
             connect.innerText = 'disconnect'
         print("Before paste")
         #await terminal.paste(sensor_code, 'hidden')
         await terminal.paste(sensor_code, 'hidden')
         print("After paste")
-        terminal.terminal.attachCustomKeyEventHandler(on_user_input)
+        document.getElementById('repl').style.display = 'block' #allow user to input only after paste is done
+        #terminal.terminal.attachCustomKeyEventHandler(on_user_input)
         #call sensor function
 
 def display_repl(event):
@@ -124,8 +194,8 @@ def display_repl(event):
     #terminal.setOption('disableStdin', True)  # Disable user input
 
 
-def on_user_input(event):
-    print("asdlkjfd;slkfj;l kjlk;sdjafl;kdsajf;l ksdjl;ksazjf")    
+#def on_user_input(event):
+#    print("asdlkjfd;slkfj;l kjlk;sdjafl;kdsajf;l ksdjl;ksazjf")    
 
 
 #sensor_info and get terminal in same button
@@ -139,6 +209,7 @@ def on_sensor_info(event):
         sensor = False #so that on next click it displays terminal
         #turn off repl to prevent user from interfering with my repl sensor code
         document.getElementById('repl').style.display = 'none'
+        sensors.innerText = 'Get Terminal'
     #execute code for thisL 
     # [(1, 0, 61), (0, 0, 0), (1, 2, 63), (1, 3, 48), (1, 4, 62), (1, 5, 64)]
         #stop_loop = False
@@ -151,6 +222,8 @@ def on_sensor_info(event):
             await terminal.eval(execute_code, 'hidden')
             port_info_array = await terminal.eval("""port_info
                                 """, 'hidden')
+            #clearing it every time (very important)
+            sensor_info_html = ""  # Initialize HTML content for sensor info
             #iterating over tuples/ports
             for t in port_info_array:
                 if t[0] == 1: #if something is connected to port
@@ -158,16 +231,47 @@ def on_sensor_info(event):
                     #t[2] is function/device id & t[1] is port #
                     if stop_loop:
                         break;
+                    #number is tuple with some sort of sensor value
+                    #if anything but color sensor (just display 1 value)
+                        #then 
                     number = await terminal.eval(f"""
                         number = function_dict[{t[2]}]({t[1]})
                         number
                         
                     """, 'hidden')
-    
+                    #if it is the color sensor process number as a tuple
+                    #where tuple is (color from table 1, r, g , b)
+                    if (t[2] == 61):
+                        #print("SIUU")
+                        #pass
+                        color_info = number
+                        color_detected = ["Red", "Green", "Blue", "Magenta", "Yellow", "Orange", "Azure", "Black", "White", "Unknown"]
+                        color_name = color_detected[color_info[0] - 1] if 0 < color_info[0] <= len(color_detected) else "Unknown"
+                        sensor_info_html += f"""
+                            <div class="sensor-info-item">
+                                <span>Number: {color_info} (Color: {color_name})</span>
+                                <span>Device: {t[2]}</span>
+                                <span>Port: {t[1]}</span>
+                            </div>
+                        """
+                    else:
+                        sensor_info_html += f"""
+                            <div class="sensor-info-item">
+                                <span>Number: {number}</span>
+                                <span>Device: {t[2]}</span>
+                                <span>Port: {t[1]}</span>
+                            </div>
+                        """
+            # Update the sensor info container with new HTML content
+            document.getElementById('sensor-info').innerHTML = sensor_info_html
+            #await asyncio.sleep(0.3)
+                        #print("NAHH")
+                        #t is just 1 number (display that number)
+                        
                     #now display number, device (t[2]), and port t[1]
                     #instead of returning #, return array of tuple
                     
-                    print("Number:", number)
+            #print("Number:", number)
             #time.sleep(1)
             #counter = counter + 1
         #print("Back_HERE: ", port_info_array)
@@ -177,6 +281,7 @@ def on_sensor_info(event):
         #time.sleep_ms(1000) #to allow while loop to finish current iteration
         #await asyncio.sleep(0.1)
         sensor = True #so that next time it hides repls
+        sensors.innerText = 'Sensor Readings'
         document.getElementById('repl').style.display = 'block'
 
         #this code is kind of important.

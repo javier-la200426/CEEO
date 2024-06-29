@@ -209,6 +209,7 @@ def on_sensor_info(event):
     stop_loop = False
     if sensor: #means you want to display sensors
         download.disabled = True #disable it 
+        connect.disabled = True
         sensor = False #so that on next click it displays terminal
         #turn off repl to prevent user from interfering with my repl sensor code
         document.getElementById('repl').style.display = 'none'
@@ -281,6 +282,7 @@ def on_sensor_info(event):
     else: #go back to terminal
         #enable download button
         download.disabled = False
+        connect.disabled = False
         stop_loop = True
         #asyncio.
         #time.sleep_ms(1000) #to allow while loop to finish current iteration
@@ -308,6 +310,7 @@ async def on_load(event):
     if terminal.connected:
         download.disabled = True #dont enable user to click downaload again if already in downlaod
         sensors.disabled = True #dont let user run sensors
+        connect.disabled = True #dont allow user to disconnect
         github = path.value
         name = github.split('/')[-1]
         print('path, name: ',github,name)
@@ -315,6 +318,7 @@ async def on_load(event):
         status = await terminal.download(name,reply)
         sensors.disabled = False #re-enable it
         download.disabled = False
+        connect.disabled = False
         if not status: 
             window.alert(f"Failed to load {name}")  
     else:

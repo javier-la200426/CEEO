@@ -337,21 +337,28 @@ def on_sensor_info(event):
        # document.getElementById('sensor_readings').style.display = 'block'
     
 
+#NEXT STEP: download more tha n 1 file (length of path). make for loop (chat)
 async def on_load(event):
     if terminal.connected:
         download.disabled = True #dont enable user to click downaload again if already in downlaod
         sensors.disabled = True #dont let user run sensors
         connect.disabled = True #dont allow user to disconnect
-        github = path.value
-        name = github.split('/')[-1]
-        print('path, name: ',github,name)
-        reply = await restapi.get(github)
-        status = await terminal.download(name,reply)
-        sensors.disabled = False #re-enable it
-        download.disabled = False
-        connect.disabled = False
-        if not status: 
-            window.alert(f"Failed to load {name}")  
+
+        git_paths = path.value.split() #gets arrays of urls
+        #download_statuses = [] #will store statuses for each file 
+        
+        #github = path.value #gets url (useless now)
+        
+        for current_path in git_paths:
+            name = current_path.split('/')[-1] 
+            print('path, name: ',current_path,name)
+            reply = await restapi.get(current_path)
+            status = await terminal.download(name,reply)
+            sensors.disabled = False #re-enable it
+            download.disabled = False
+            connect.disabled = False
+            if not status: 
+                window.alert(f"Failed to load {name}. Click Ok to continue downloading other files")  
     else:
         window.alert('connect to a processor first')
 

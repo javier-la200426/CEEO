@@ -13,8 +13,9 @@ SPIKE = 256
 
 stop_loop = False #indicates when to stop loop (u want it to stop when user has access to repl)
 sensor = True #for switching between if and else statements (going from user repl to sensors)
-#defining functions to paste into spike
-
+#defi
+#making dictionary here because I think that it is less efficient if I were
+# to send all these strings from chip to computer (thus chip only sends digits)
 device_names = {
     48: "medium_motor",
     49: "big_motor",
@@ -25,12 +26,24 @@ device_names = {
     65: "small_motor"
     
 }
+
+#making 
+port_names = {
+    0: 'A',
+    1: 'B',
+    2: 'C',
+    3: 'D',
+    4: 'E',
+    5: 'F'
+}
 sensor_code = """
 
 import device
 import motor
 import color_sensor
 import color
+import distance_sensor
+import force_sensor
 
 #test this
 def big_motor_print(port_num):
@@ -98,11 +111,12 @@ def color_sensor_print(port_num):
     
 def distance_sensor_print(port_num):
     print("distance sensor", port_num)
-    return 1 #change this
+    return distance_sensor.distance(port_num)
     
 def force_sensor_print(port_num):
     print("force sensor", port_num)
-    return 1 #change this
+    return force_sensor.force(port_num)
+    
     
 def light_matrix_print(port_num):
     print("light matrix", port_num)
@@ -272,7 +286,7 @@ def on_sensor_info(event):
                             <div class="sensor-info-item">
                                 <span>Number: {color_info} (Color: {color_name})</span>
                                 <span>Device: {device_names[t[2]]}</span>
-                                <span>Port: {t[1]}</span>
+                                <span>Port: {port_names[t[1]]}</span>
                             </div>
                         """
                     else:
@@ -280,7 +294,7 @@ def on_sensor_info(event):
                             <div class="sensor-info-item">
                                 <span>Number: {number}</span>
                                 <span>Device: {device_names[t[2]]}</span>
-                                <span>Port: {t[1]}</span>
+                                <span>Port: {port_names[t[1]]}</span>
                             </div>
                         """
             # Update the sensor info container with new HTML content

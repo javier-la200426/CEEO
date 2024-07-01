@@ -21,8 +21,10 @@ class CEEO_AI:
             if button.pressed(button.LEFT):
                 break
             utime.sleep(0.01)
+            
         while button.pressed(button.LEFT):
             utime.sleep(0.01)
+            return 1
     #ADD DATA
     def add_data(self, key, value):
         if key in self.lookup_table:
@@ -77,6 +79,8 @@ class CEEO_AI:
         #Record and measure the length of the next button press
         #Check to see if user wishes to prematurely end training
         while not fs.force(force_port) > 0:
+            if button.pressed(button.LEFT):
+                break
             utime.sleep(0.01)
         #If they press the button, measure the length in milliseconds
         time = 0
@@ -104,3 +108,4 @@ class CEEO_AI:
     #FORGET
     def forget(self):
         self.lookup_table.clear()
+

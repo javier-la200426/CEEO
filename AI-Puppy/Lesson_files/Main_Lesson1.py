@@ -9,7 +9,7 @@ f_sensor = port.F
 train_color1 = color.AZURE
 ai.button_color(train_color1)
 
-print('PRINT_KEY:PRINT_KEY:**Now in training mode')
+print('PRINT_KEY:**Now in training mode')
 
 train_num = 3
 

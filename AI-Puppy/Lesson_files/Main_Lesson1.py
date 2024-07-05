@@ -24,6 +24,8 @@ train_color2 = color.BLUE
 ai.button_color(train_color2)
 sound.beep(440)
 
+
+
 print('**Train your puppy to be SAD when stroked or patted!')
 print('**Press right button to record a data point before using the touch sensor. You are recording %s data points.' % (train_num))
 for i in range(train_num):

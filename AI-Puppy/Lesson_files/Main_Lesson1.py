@@ -58,3 +58,4 @@ while not button.pressed(button.LEFT):
     elif guess == 'sad':
         light_matrix.show_image(light_matrix.IMAGE_SAD)
     utime.sleep(0.1)
+

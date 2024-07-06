@@ -34,13 +34,12 @@ play_color = color.MAGENTA
 ai.button_color(play_color)
 
 sound.beep(880)
-
 K = 3
-
 while not button.pressed(button.LEFT):
     guess_time = ai.get_force(f_sensor)
     guess = ai.KNN_1D(guess_time, K)
     light_matrix.show_image(guess)
+    utime.sleep(0.1)
     utime.sleep(0.1)
 
 

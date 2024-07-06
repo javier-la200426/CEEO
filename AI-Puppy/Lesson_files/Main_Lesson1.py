@@ -57,18 +57,6 @@ while not button.pressed(button.LEFT):
         light_matrix.show_image(light_matrix.IMAGE_HAPPY)
     elif guess == 'sad':
         light_matrix.show_image(light_matrix.IMAGE_SAD)
-        #comment here
-        print("going to sleep")
         utime.sleep(0.1)
+        utim.sleep(0.1)
         print("finished sleeping")
-
-
-
-
-
-
-
-
-
-
-

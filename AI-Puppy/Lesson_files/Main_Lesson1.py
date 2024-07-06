@@ -20,12 +20,12 @@ print('PRINT_KEY:**Press right button to record a data point before using the to
 for i in range(train_num):
     ai.wait_for_right_button()
     ai.add_data('happy', ai.get_force(f_sensor))
-    #sound.beep(220)
+    sound.beep(220)
     utime.sleep(0.75)
 
 train_color2 = color.BLUE
 ai.button_color(train_color2)
-#sound.beep(440)
+sound.beep(440)
 
 print('PRINT_KEY:**Train your puppy to be SAD when stroked or patted!')
 
@@ -34,7 +34,7 @@ print('PRINT_KEY:**Press right button to record a data point before using the to
 for i in range(train_num):
     ai.wait_for_right_button()
     ai.add_data('sad', ai.get_force(f_sensor))
-    #sound.beep(220)
+    sound.beep(220)
     utime.sleep(0.75)
     
 # PUPPY IS TRAINED
@@ -45,7 +45,7 @@ print('PRINT_KEY:**Press right button to exit training mode and play with your p
 ai.wait_for_right_button() # Now in play mode!
 play_color = color.MAGENTA
 ai.button_color(play_color)
-#sound.beep(880)
+sound.beep(880)
 
 print('PRINT_KEY:**Puppy is trained!')
 

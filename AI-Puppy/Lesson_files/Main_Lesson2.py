@@ -11,7 +11,7 @@ motors = [legL,legR]
 ### PUPPY TRAINING MODE ###
 train_color1 = color.AZURE
 ai.button_color(train_color1)
-print('PRINT_KEY:PRINT_KEY:Now in training mode')
+print('PRINT_KEY:Now in training mode')
 train_num = 5
 print('PRINT_KEY:**IMPORTANT: Connect motors to ports C and D. Distance Sensor goes in Port A!!!)
 print('PRINT_KEY:Move the legs of your puppy so that it is sitting!')

@@ -50,7 +50,7 @@ ai.wait_for_right_button() # Now in play mode!
 play_color = color.MAGENTA
 ai.button_color(play_color)
 sound.beep(880)
-print('PRINT_KEY:Puppy is trained!')
+print('PRINT_KEY:**Puppy is trained!')
 K = 3
 while not button.pressed(button.LEFT):
     guess_dist = ai.get_distance(d_sensor)

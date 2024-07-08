@@ -48,6 +48,7 @@ ai.button_color(play_color)
 sound.beep(880)
 
 print('PRINT_KEY:**Puppy is trained!')
+print('PRINT_KEY:**Press left button to exit program')
 
 K = 3
 while not button.pressed(button.LEFT):

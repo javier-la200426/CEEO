@@ -35,28 +35,27 @@ class CEEO_AI:
         velocities = []
         distances = []
         legL, legR = legs
-        print(':waiting for movement...')
+        print('waiting for movement...')
         while abs(motor.velocity(legL)) < 5:
             utime.sleep(0.01)
-        print(':recording', end='')
+        print('recording', end='')
         while motor.velocity(legL) != 0:
-            print(':.',end='')
+            print('.',end='')
             velocities.append(motor.velocity(legL)*10)
             distances.append(ds.distance(dist))
             utime.sleep(0.3)
         v_avg = int(sum(velocities) / len(velocities))
         d_avg = sum(distances) / len(distances)
-        print('\n')
-        print(':average velocity: ', v_avg, '. average distance', d_avg)
+        print('\n average velocity: ', v_avg, '. average distance', d_avg)
         return v_avg, d_avg
         
     def add_data(self, key, value):
         if key in self.lookup_table:
             self.lookup_table[key].append(value)
-            print(":", value)
+            print(value)
         else:
             self.lookup_table[key] = [value]
-            print(":", value)
+            print(value)
     
     #1-D KNN
     def KNN_1D(self, sample, k):
@@ -122,7 +121,7 @@ class CEEO_AI:
     def linreg_prediction(self, dist, slope, intercept):
         # Use trained model to do predict time to go forward and move
         vel = slope*dist + intercept # Calculate v with the model
-        print('\rd = '+str(dist)+'mm, v = '+str(int(vel)) + 'deg/s', end = '   ') #how do i put  here
+        print('\rd = '+str(dist)+'mm, v = '+str(int(vel)) + 'deg/s', end = '   ')
         return vel
         
     #DIFFERENCE
@@ -181,8 +180,8 @@ class CEEO_AI:
         legL, legR = legs
         posL = motor.absolute_position(legL)
         posR = motor.absolute_position(legR)
-        print(':Left Position: ',posL)
-        print(':Right Position: ',posR)
+        print('Left Position: ',posL)
+        print('Right Position: ',posR)
         positions = posL, posR
         return positions
     

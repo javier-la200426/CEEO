@@ -35,28 +35,28 @@ class CEEO_AI:
         velocities = []
         distances = []
         legL, legR = legs
-        print('PRINT_KEY:waiting for movement...')
+        print(':waiting for movement...')
         while abs(motor.velocity(legL)) < 5:
             utime.sleep(0.01)
-        print('PRINT_KEY:recording', end='')
+        print(':recording', end='')
         while motor.velocity(legL) != 0:
-            print('PRINT_KEY:.',end='')
+            print(':.',end='')
             velocities.append(motor.velocity(legL)*10)
             distances.append(ds.distance(dist))
             utime.sleep(0.3)
         v_avg = int(sum(velocities) / len(velocities))
         d_avg = sum(distances) / len(distances)
         print('\n')
-        print('PRINT_KEY:average velocity: ', v_avg, '. average distance', d_avg)
+        print(':average velocity: ', v_avg, '. average distance', d_avg)
         return v_avg, d_avg
         
     def add_data(self, key, value):
         if key in self.lookup_table:
             self.lookup_table[key].append(value)
-            print("PRINT_KEY:", value)
+            print(":", value)
         else:
             self.lookup_table[key] = [value]
-            print("PRINT_KEY:", value)
+            print(":", value)
     
     #1-D KNN
     def KNN_1D(self, sample, k):
@@ -122,7 +122,7 @@ class CEEO_AI:
     def linreg_prediction(self, dist, slope, intercept):
         # Use trained model to do predict time to go forward and move
         vel = slope*dist + intercept # Calculate v with the model
-        print('\rd = '+str(dist)+'mm, v = '+str(int(vel)) + 'deg/s', end = '   ') #how do i put print_key here
+        print('\rd = '+str(dist)+'mm, v = '+str(int(vel)) + 'deg/s', end = '   ') #how do i put  here
         return vel
         
     #DIFFERENCE
@@ -181,8 +181,8 @@ class CEEO_AI:
         legL, legR = legs
         posL = motor.absolute_position(legL)
         posR = motor.absolute_position(legR)
-        print('PRINT_KEY:Left Position: ',posL)
-        print('PRINT_KEY:Right Position: ',posR)
+        print(':Left Position: ',posL)
+        print(':Right Position: ',posR)
         positions = posL, posR
         return positions
     

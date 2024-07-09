@@ -9,13 +9,13 @@ f_sensor = port.F
 train_color1 = color.AZURE
 ai.button_color(train_color1)
 
-print('PRINT_KEY:**Now in training mode')
+print('**Now in training mode')
 
 train_num = 3
 
-print('PRINT_KEY:**Train your puppy to be HAPPY when stroked or patted!')
-print('PRINT_KEY:**A stroke means you press the touch sensor for a long time and a pat means you press the touch sensor for a shorter amount of time!') # no need for this on webpage, gif will explain
-print('PRINT_KEY:**Press right button to record a data point before using the touch sensor. You are recording %s data points.' % (train_num))
+print('**Train your puppy to be HAPPY when stroked or patted!')
+print('**A stroke means you press the touch sensor for a long time and a pat means you press the touch sensor for a shorter amount of time!') # no need for this on webpage, gif will explain
+print('**Press right button to record a data point before using the touch sensor. You are recording %s data points.' % (train_num))
 
 for i in range(train_num):
     ai.wait_for_right_button()
@@ -27,9 +27,9 @@ train_color2 = color.BLUE
 ai.button_color(train_color2)
 sound.beep(440)
 
-print('PRINT_KEY:**Train your puppy to be SAD when stroked or patted!')
+print('**Train your puppy to be SAD when stroked or patted!')
 
-print('PRINT_KEY:**Press right button to record a data point before using the touch sensor. You are recording %s data points.' % (train_num))
+print('**Press right button to record a data point before using the touch sensor. You are recording %s data points.' % (train_num))
 
 for i in range(train_num):
     ai.wait_for_right_button()
@@ -40,15 +40,15 @@ for i in range(train_num):
 # PUPPY IS TRAINED
 
 ### PUPPY PLAY MODE ###
-print('PRINT_KEY:**Press right button to exit training mode and play with your puppy!')
+print('**Press right button to exit training mode and play with your puppy!')
 
 ai.wait_for_right_button() # Now in play mode!
 play_color = color.MAGENTA
 ai.button_color(play_color)
 sound.beep(880)
 
-print('PRINT_KEY:**Puppy is trained!')
-print('PRINT_KEY:**Press left button to exit program')
+print('**Puppy is trained!')
+print('**Press left button to exit program')
 
 K = 3
 while not button.pressed(button.LEFT):

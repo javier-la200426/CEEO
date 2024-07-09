@@ -61,4 +61,3 @@ while not button.pressed(button.LEFT):
         utime.sleep(0.1)
         utime.sleep(0.1)
         print("finished sleeping")
-#**END-CODE**#

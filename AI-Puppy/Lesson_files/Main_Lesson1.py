@@ -48,6 +48,7 @@ ai.button_color(play_color)
 sound.beep(880)
 
 print('**Puppy is trained!')
+print('**Press force sensor to see faces')
 print('**Press left button to exit program')
 
 K = 3

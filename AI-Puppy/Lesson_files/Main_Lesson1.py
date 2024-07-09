@@ -9,6 +9,8 @@ f_sensor = port.F
 train_color1 = color.AZURE
 ai.button_color(train_color1)
 
+print('PRINT_KEY:') #have this be first pritn statement
+
 print('**Now in training mode')
 
 train_num = 3
@@ -61,5 +63,3 @@ while not button.pressed(button.LEFT):
         utime.sleep(0.1)
         utime.sleep(0.1)
         print("finished sleeping")
-
-print('PRINT_KEY:')

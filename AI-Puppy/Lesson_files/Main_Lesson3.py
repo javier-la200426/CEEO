@@ -42,7 +42,7 @@ print('**Add %s data samples for your 1st trick by interacting with the sensor a
 print('**You should hear a beep when a data point is recorded.')
 for i in range(train_num):
     ai.wait_for_right_button()
-    ai.add_data('trick1',"SENSOR FUNC HERE") # ADD SENSOR COMMAND HERE, GET RID OF STRING
+    ai.add_data('trick1',ai.get_distance(sensor)) # ADD SENSOR COMMAND HERE, GET RID OF STRING
     sound.beep(220)
     utime.sleep(0.75)
     
@@ -54,7 +54,7 @@ print('**Now add data samples for your next trick!')
 print('**Make sure you are interacting with the sensor differently, so your puppy will be able to know what trick to perform after training!')
 for i in range(train_num):
     ai.wait_for_right_button()
-    ai.add_data('trick2',"get_distance") # ADD SENSOR COMMAND HERE, GET RID OF STRING
+    ai.add_data('trick2',ai.get_distance(sensor)) # ADD SENSOR COMMAND HERE, GET RID OF STRING
     sound.beep(220)
     utime.sleep(0.75)
 # Add code like the code above to train your puppy to do more tricks!!!

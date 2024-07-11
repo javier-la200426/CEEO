@@ -16,6 +16,7 @@ train_num = 3
 print('**Train your puppy to be HAPPY when stroked or patted!')
 print('**A stroke means you press the touch sensor for a long time and a pat means you press the touch sensor for a shorter amount of time!') # no need for this on webpage, gif will explain
 print('**Press right button to record a data point before using the touch sensor. You are recording %s data points.' % (train_num))
+print('**Make sure Force Sensor is plugged into port F')
 
 for i in range(train_num):
     ai.wait_for_right_button()

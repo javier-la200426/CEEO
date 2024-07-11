@@ -52,7 +52,7 @@ print('**Puppy is trained!')
 print('**Press force sensor to see faces')
 print('**Press left button to exit program')
 
-K = 3
+K = 5
 while not button.pressed(button.LEFT):
     guess_time = ai.get_force(f_sensor)
     guess = ai.KNN_1D(guess_time, K)

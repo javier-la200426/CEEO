@@ -13,7 +13,7 @@ train_color1 = color.AZURE
 ai.button_color(train_color1)
 print('**Now in training mode')
 train_num = 5
-print('**IMPORTANT: Connect motors to ports C and D. Distance Sensor goes in Port A!!!')
+
 print('**Move the legs of your puppy so that it is sitting!')
 print('**When done press the right button!')
 ai.wait_for_right_button()
@@ -55,7 +55,7 @@ K = 3
 while not button.pressed(button.LEFT):
     guess_dist = ai.get_distance(d_sensor)
     guess = ai.KNN_1D(guess_dist, K)
-    print('**%d mm distance is classified as %s' % (guess_dist, guess))
+    print('' if guess_dist is None else '**%d mm distance is classified as %s' % (guess_dist, guess))
     if guess == 'sit': # Puppy sits or stands
         ai.go_to_position(motors,sit_position)
     elif guess == 'stand':

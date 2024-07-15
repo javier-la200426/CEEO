@@ -59,22 +59,25 @@ class CEEO_AI:
     
     #1-D KNN
     def KNN_1D(self, sample, k):
-        total_values = 0
-        # Iterate over each key-value pair in the dictionary
-        for key, values in self.lookup_table.items():
-            # Add the length of the list (number of values) to total_values
-            total_values += len(values)
-        differences = [(0,"")]*total_values
-        i = 0
-        for key, values in self.lookup_table.items():
-            for value in values:
-                differences[i] = (self.diff(sample, value), key) # add [0] to value and sample if not working
-                i += 1
-        differences.sort()
-        nearest_neighbors = differences[:k]
-        nearest_labels = [point[1] for point in nearest_neighbors]
-        guess = max(nearest_labels, key=nearest_labels.count)
-        return guess
+        if sample is None:
+            return None
+        else:
+            total_values = 0
+            # Iterate over each key-value pair in the dictionary
+            for key, values in self.lookup_table.items():
+                # Add the length of the list (number of values) to total_values
+                total_values += len(values)
+            differences = [(0,"")]*total_values
+            i = 0
+            for key, values in self.lookup_table.items():
+                for value in values:
+                    differences[i] = (self.diff(sample, value), key) # add [0] to value and sample if not working
+                    i += 1
+            differences.sort()
+            nearest_neighbors = differences[:k]
+            nearest_labels = [point[1] for point in nearest_neighbors]
+            guess = max(nearest_labels, key=nearest_labels.count)
+            return guess
     
     #3-D KNN
     def KNN_3D(self, sample, k):
@@ -139,9 +142,9 @@ class CEEO_AI:
     #DISTANCE SENSOR
     def get_distance(self, dist_port):
         while not button.pressed(button.LEFT):
-            dist = [ds.distance(dist_port)]
-            if dist[0] != -1:
-                return dist[0]
+            dist = ds.distance(dist_port)
+            if dist != -1:
+                return dist
             else:
                 pass
         
@@ -152,7 +155,7 @@ class CEEO_AI:
         
     #LIGHT
     def get_light(self, refl_port):
-        reflection = [cs.reflection(refl_port)]
+        reflection = cs.reflection(refl_port)
         return reflection
     
     #COLOR SENSOR

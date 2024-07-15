@@ -55,7 +55,7 @@ K = 3
 while not button.pressed(button.LEFT):
     guess_dist = ai.get_distance(d_sensor)
     guess = ai.KNN_1D(guess_dist, K)
-    print('' if guess_dist is None else '**%d mm distance is classified as %s' % (guess_dist, guess))
+    print('**%d mm distance is classified as %s' % (guess_dist, guess))
     if guess == 'sit': # Puppy sits or stands
         ai.go_to_position(motors,sit_position)
     elif guess == 'stand':

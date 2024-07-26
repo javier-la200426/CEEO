@@ -25,7 +25,7 @@ for i in range(train_num):
     ai.wait_for_right_button()
     ai.add_data('sit',ai.get_distance(d_sensor))
     sound.beep(220)
-    utime.sleep(0.75)
+    utime.sleep(0.25)
 
 train_color2 = color.BLUE
 ai.button_color(train_color2)
@@ -40,7 +40,7 @@ for i in range(train_num):
     ai.wait_for_right_button()
     ai.add_data('stand',ai.get_distance(d_sensor))
     sound.beep(220)
-    utime.sleep(0.75)
+    utime.sleep(0.25)
     
 # PUPPY IS TRAINED
 

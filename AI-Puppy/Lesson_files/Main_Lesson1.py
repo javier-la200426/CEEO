@@ -22,7 +22,7 @@ for i in range(train_num):
     ai.wait_for_right_button()
     ai.add_data('happy', ai.get_force(f_sensor))
     sound.beep(220)
-    utime.sleep(0.75)
+    utime.sleep(0.25)
 
 train_color2 = color.BLUE
 ai.button_color(train_color2)
@@ -36,7 +36,7 @@ for i in range(train_num):
     ai.wait_for_right_button()
     ai.add_data('sad', ai.get_force(f_sensor))
     sound.beep(220)
-    utime.sleep(0.75)
+    utime.sleep(0.25)
     
 # PUPPY IS TRAINED
 

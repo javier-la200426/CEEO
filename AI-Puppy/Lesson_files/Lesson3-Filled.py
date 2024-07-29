@@ -4,9 +4,9 @@ ai = CEEO_AI.CEEO_AI()
 
 ### ADD YOUR SENSOR, MOTORS, AND PORTS HERE ###
 # Choose one sensor to use for this lesson!
-sensor = port.A # You can rename this based on the sensor you are using
-legL = port.D
-legR = port.C
+sensor = port.A # distance sensor
+legL = port.D #a motor
+legR = port.C #a motor
 motors = [legL,legR]
 
 # Make sure you edited the code above to match your puppy's ports!
